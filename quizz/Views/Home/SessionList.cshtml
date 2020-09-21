@@ -1,0 +1,6 @@
+﻿@model List<ARQuizz.Session>
+<h3>Best users score</h3>
+@foreach(ARQuizz.Session s in Model)
+{
+    <p>@s.UserName : @s.Score</p>
+}

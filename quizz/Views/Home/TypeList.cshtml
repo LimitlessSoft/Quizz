@@ -1,0 +1,13 @@
+﻿@model List<ARQuizz.QuestionType>
+
+@foreach (ARQuizz.QuestionType q in Model)
+{
+    if (q.ID == 0)
+    {
+        <p style="visibility:unset;">@q.ID : @q.Name</p>
+    }
+    else
+    {
+        <p>@q.ID : @q.Name <a href="/Quizz/Question/Type/@q.ID">Change</a></p>
+    }
+}

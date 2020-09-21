@@ -1,0 +1,128 @@
+﻿@model ARQuizz.Question
+
+<script>
+    var question = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+</script>
+
+
+<style>
+    .data {
+        margin: 10px;
+    }
+
+    .data button {
+        border: none;
+        background-color: rgb(50, 50, 50);
+        color: white;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .data button:hover {
+        cursor: pointer;
+        background-color: white;
+        color: black;
+    }
+
+    .data input {
+        margin: 5px;
+        padding: 5px;
+        border: none;
+        border-bottom: 1px solid dimgray;
+    }
+</style>
+
+<div class="data">
+    <label>ID: @Model.ID</label>
+</div>
+
+<div class="data">
+
+    <label>Group:</label>
+    <select id="QuestionGroup_input" onchange="question.Type = this.value;">
+        @foreach(ARQuizz.QuestionType t in ARQuizz.QuestionType.List())
+        {
+            if (t.Name == "Miks")
+                continue;
+            <option value="@t.ID">@t.Name</option>
+        }
+    </select>
+
+    <script>
+        $(function () {
+            $("#QuestionGroup_input").val(@Html.Raw((int)Model.Type));
+        });
+    </script>
+</div>
+
+<div class="data">
+    <label>Title: </label>
+    <input onkeyup="question.Title = this.value;" style="width: 400px" id="QuestionTitle_input" type="text" placeholder="Title . . ." value="@Model.Title" />
+</div>
+
+<div class="data">
+    <button onclick="UpdateQuestionInfo()">Update</button>
+</div>
+<div id="ODG">
+    @foreach (ARQuizz.Answer a in Model.Answers)
+    {
+      
+            <p> Pitanje:<input onkeyup="OnChangeTxt(@a.ID, this.value)" type="text" value="@a.Text" /> Poeni:<input onkeyup="OnChangeScore(@a.ID, this.value)" type="text" value="@a.Score" /></p>
+        
+    }
+</div>
+    <button onclick="DodajOdgovor()">Dodaj odgovor</button>
+    <script>
+
+        function OnChangeTxt(tt, txt) {
+            
+            var bool = false;
+            for (var i = 0; i < question.Answers.length; i++) {
+                if (question.Answers[i].ID == tt) {
+                    question.Answers[i].Text = txt;
+                    bool = true;
+                    return;
+                }
+
+            }
+            if (bool == false) {
+                var p = {};
+                p.ID = parseInt(tt);
+                p.Text = txt;
+                p.Score = parseInt(0);
+                question.Answers.push(p);
+            }
+
+        }
+    function DodajOdgovor() {
+        var p = @Html.Raw(Model.Answers.Max(t => t.ID) + 1);
+        document.getElementById("ODG").innerHTML += ' <p> Pitanje:<input onkeyup="OnChangeTxt('+p+', this.value)" type="text" value="" /> Poeni:<input onkeyup="OnChangeScore('+p+', this.value)" type="text" value="" /></p>'
+    }
+
+      
+
+    function OnChangeScore(id, scr) {
+        for (var i = 0; i < question.Answers.length; i++) {
+            if (question.Answers[i].ID == id) {
+                question.Answers[i].Score = parseInt(scr);
+            }
+        }
+     
+
+    }
+    </script>
+    <script>
+
+        function UpdateQuestionInfo() {
+
+            $.ajax({
+                url: "/Quizz/Question/Update",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(question),
+                success: function () {
+                    alert("Success!");
+                }
+            });
+        }
+    </script>

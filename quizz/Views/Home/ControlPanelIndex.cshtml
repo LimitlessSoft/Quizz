@@ -1,0 +1,34 @@
+﻿<p>
+    Show all questions: <button onclick="ShowAllQuestion()">Show</button>
+    Show all types: <button onclick="ShowTypes()">Show</button>
+    Add question: <button onclick="AddQuestion()">Add</button>
+    Add type: <button onclick="AddType()">Add</button>
+</p>
+<h2>Buffer</h2>
+<span>Refresh buffer <button onclick="RefreshBuffer()">Refresh</button></span>
+<p id="Pocinjemo" style="visibility:hidden;"> UCITAVANJE!!!!!!!!!!!!</p>
+<script>
+    function ShowAllQuestion() {
+        window.location.href = "/Quizz/Question/List";
+    }
+    function AddType() {
+        window.location.href = "/Quizz/Type/New";
+    }
+
+    function AddQuestion() {
+        window.location.href = "/Quizz/Question/New";
+    }
+    function ShowTypes() {
+        window.location.href = "/Quizz/Question/Types";
+    }
+    function RefreshBuffer() {
+        document.getElementById("Pocinjemo").style.visibility = "visible";
+        $.ajax({
+            url: "/Quizz/ControlPanel/RefreshBuffer",
+            method: "GET",
+            success: function (str) {
+                document.getElementById("Pocinjemo").style.visibility = "hidden";
+            }
+        })
+    }
+</script>

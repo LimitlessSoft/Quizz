@@ -1,0 +1,32 @@
+﻿@model List<ARQuizz.Session>
+
+@{ 
+    int UkupnoTacnihPitanja(int id)
+    {
+        int ukupno = 0;
+        List<ARQuizz.Question> ls = Model.Where(t=>t.ID == id).Select(t=>t.Questions).FirstOrDefault();
+        foreach (ARQuizz.Question pp in ls)
+            if (pp.Answers.Where(t=>t.IsAnswerd && t.Score > 0).Any())
+                ukupno++;
+
+        return ukupno;
+
+    }
+    int UkupnoODgovorenihPitanja(int id)
+    {
+        int ukupno = 0;
+        List<ARQuizz.Question> ls = Model.Where(t => t.ID == id).Select(t => t.Questions).FirstOrDefault();
+        foreach (ARQuizz.Question pp in ls)
+            if (pp.Answers.Any(t=>t.IsAnswerd == true))
+                ukupno++;
+
+        return ukupno;
+    }
+}
+@foreach(ARQuizz.Session s in Model)
+{
+    <p>Kviz odigran: @s.Start.ToString("dd.MM.yyyy HH:mm") - 
+    Skor postignut: @s.Score Kviz je imao: @s.Questions.Count() 
+    pitanja   odgovorili ste na @UkupnoODgovorenihPitanja(s.ID) 
+    Tacnih odgovora:@UkupnoTacnihPitanja(s.ID) </p> <a href="/Quizz/Result/@s.UserName/@s.ID">Vidi</a>
+}

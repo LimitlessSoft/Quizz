@@ -1,0 +1,26 @@
+﻿@model ARQuizz.QuestionType;
+
+<p>
+    <label>ID:</label><span>@Model.ID</span></p>  
+    <p><label>Naziv: <input type="text" id="txx" value="@Model.Name" /></label></p>
+    <p><label>Broj pitanja: <input type="text" value="@Model.Lenght" id="lenght" /></label></p>
+    <p><label>Vreme trajanja kviza u sekundama: <input type="text" id="time" value="@Model.Duration" /></label>
+    <button onclick="TypeChange()" > Save</button>
+</p>
+<h4>Spisak pitanja</h4>
+<ul>
+    @foreach (ARQuizz.Question q in ARQuizz.Buffer.Questions)
+    {
+            <li>@q.Title</li>
+    }
+</ul>
+<script>
+    function TypeChange() {
+        var p = document.getElementById("txx").value;
+        var time = document.getElementById("time").value;
+        var lenght = document.getElementById("lenght").value;
+        alert(lenght);
+
+        window.location.href = "/Quizz/Question/Type/@Model.ID/" + p + "/" + time + "/" + lenght;
+    }
+</script>

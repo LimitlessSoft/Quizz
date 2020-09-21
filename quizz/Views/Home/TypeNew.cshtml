@@ -1,0 +1,59 @@
+﻿@{
+    int ID = ARQuizz.Buffer.QuestionTypes.Max(t => t.ID) + 1;
+    List<ARQuizz.QuestionType> ar = new List<ARQuizz.QuestionType>();
+}
+<script>
+    var type = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ar));
+    var typeid = @Html.Raw(ID);
+</script>
+<p>
+    <div id="type">
+      <label>New Type:</label>  <input class="ty" onkeyup="AddTypes(@ID,this.value)"  type="text" placeholder="Title"/>
+    </div>
+   
+</p>
+<button onclick="AddMoreTypes()">Add type</button>
+<button onclick="SaveTypes()">Save</button>
+<button onclick="p()">adasd</button>
+<p id="ppp"></p>
+<script>
+    function AddMoreTypes() {
+        var id = parseInt(typeid) + 1;
+        typeid = id;
+        document.getElementById("type").innerHTML += ' <label>New Type:</label>  <input class="ty" onkeyup="AddTypes(' + id + ',this.value)"  type="text" placeholder="Title"/>';
+    }
+
+    function AddTypes(id, title) {
+         for (var p = 0; p < type.length; p++) {
+            if (type[p].ID == id) {
+                type[p].Name = title;
+                return;
+            }
+           
+        }
+        var newType = {};
+        newType.ID = id;
+        newType.Name = title;
+        type.push(newType);
+        return;
+        
+    }
+
+    function p() {
+        document.getElementById("ppp").innerHTML = JSON.stringify(type);
+    }
+
+    function SaveTypes() {
+        $.ajax({
+            url: "/Quizz/Type/Insert",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(type),
+            success: function (s) {
+                alert(s);
+            }
+        });
+    }
+
+
+</script>

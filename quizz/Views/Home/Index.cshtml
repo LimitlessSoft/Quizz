@@ -1,0 +1,72 @@
+﻿@{
+    List<ARQuizz.QuestionType> QuestionTypes = ARQuizz.Buffer.QuestionTypes;
+
+    if (QuestionTypes == null || QuestionTypes.Count == 0)
+    {
+        QuestionTypes = ARQuizz.QuestionType.List();
+    }
+}
+<div>
+    <input type="text" placeholder="Enter Your Username" id="UN"/>
+    <button onclick="StartQuizz()">Start Quizz</button>
+    <button onclick="ShowYourResult()">Prikazi tvoje rezultate</button>
+    <button onclick="ShowAllResult()">Prikazi sve rezultate</button>
+    <button onclick="ShowResults()"> Prikazi najbolje rezultate </button>
+</div>
+<div id="TipKviza" style="visibility:hidden">
+    @foreach(var p in ARQuizz.Buffer.QuestionTypes)
+    {
+     
+            <p onclick="GetQuizz(@p.ID)">@p.Name</p>
+        
+    }
+</div>
+<script>
+    function ShowResults() {
+        window.location.href = "/Quizz/Results/Best";
+    }
+    function StartQuizz() {
+        var un = document.getElementById("UN").value;
+        if (un == "") {
+            alert("Moras uneti user name");
+            return;
+        }
+        document.getElementById("TipKviza").style.visibility = "visible";
+        
+    }
+    function GetQuizz(p) {
+        var un = document.getElementById("UN").value;
+        window.location.href = "/Quizz/Question/Next?UserName=" + un + "&Type=" + p;
+    }
+    function ShowYourResult() {
+        var un = document.getElementById("UN").value;
+        if (un == "") {
+            alert("Moras uneti user name")
+            return;
+        }
+        window.location.href = "/Quizz/Results/" + un; 
+    }
+    function ShowAllResult() {
+        window.location.href = "/Quizz/Result/2";
+    }
+</script>
+
+
+
+<h2>
+    TREBA DA URADIM
+</h2>
+
+<ul>
+    <li>Da omogucim dodavanje pitanja / odgovora u bazu</li>
+    <li>Da otvoim i prodjem kroz celu sesiju</li>
+    <li>Da na kraju prikazem rezultat</li>
+    <li>Da omogucim da korisnik unese ime i umesto start quizz ide na prikazi rezultate i prikaze sve njegove rezultate</li>
+    <li>Da prikaze detalje rezultate sa pitanjima i odgovorima</li>
+    <li>Da je moguca izmena pitanja / odgovora</li>
+    <li>Leaderboard</li>
+    <li>Duzina kviza, broj pitanja po kvizu, session timeout</li>
+    <li>Tipovi pitanja</li>
+    <li>Startovanje kviza ali da postavi pitanje koji tip kviza zelis</li>
+    <li>Tipovi se dodaju modularno</li>
+</ul>

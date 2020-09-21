@@ -1,0 +1,63 @@
+﻿@model ARQuizz.Question;
+@{
+    string un = this.Context.Request.Cookies["username"];
+}
+
+<div>
+    KVIZ PREOSTALO VREME: <span id="mfaisna"></span>
+</div>
+<script>
+    var currentSession;
+    //var kk = setInterval(moj, 200);
+    var kk = setInterval(Update, 500);
+
+    function Update() {
+        $.ajax({
+            url: "/Quizz/GetCurrentSession",
+            type: "GET",
+            async: false,
+            success: function (session) {
+                var j = JSON.parse(session);
+                if (j == null) {
+                    stop();
+                    alert("Finished");
+                    return;
+                } else {
+                    currentSession = j;
+
+                    if (currentSession.TimeLeft < 0) {
+                        clearInterval(kk);
+                        // Skloniti sav tekst i staviti kruzic za ucitavanje
+                        setTimeout(function () {
+                            document.getElementById("Question").style.visibility = "hidden";
+                            window.location.href = '/Quizz/Result/-1';
+                        }, 1000);
+                    }
+                }
+            }
+        });
+
+        document.getElementById("PreostaloVreme").innerHTML = currentSession.Questions[currentSession.currentQuestion].TimeLeft.toFixed(0);
+        document.getElementById("mfaisna").innerHTML = currentSession.TimeLeft.toFixed(0);
+
+      
+        if (currentSession.Questions[currentSession.currentQuestion].TimeLeft < 0) {
+            $(".buttonAnswer").attr("disabled", "true");
+            stop();
+            window.location.reload();
+        }
+    }
+
+    function stop() {
+        clearInterval(kk);
+    }
+</script>
+<span id="PreostaloVreme"></span>
+<span>@Model.Title</span>
+<p>Score: @ARQuizz.Session.GetUserScore(un)</p>
+<div id="Question">
+    @foreach (ARQuizz.Answer p in Model.Answers)
+    {
+        <p class="buttonAnswer" onclick="window.location.href='/Quizz/Answer?id=@p.ID'">@p.Text</p>
+    }
+</div>

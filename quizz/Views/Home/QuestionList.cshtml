@@ -1,0 +1,23 @@
+﻿ @model List<ARQuizz.Question>
+@{
+    Model.OrderBy(t => t.Type).ToList();
+}
+
+<p>Pregled svih pitanja</p>
+<button onclick="window.location.href='/Quizz/Question/New'">Dodaj pitanje</button>
+@foreach (ARQuizz.QuestionType k in ARQuizz.QuestionType.List())
+{
+    if (k.Name == "Miks")
+        continue;
+    <h3>@k.Name</h3> 
+    
+
+    @foreach (ARQuizz.Question p in Model.Where(t=>t.Type == k.ID))
+    {
+       <ul>@p.Title <a href="/Quizz/Question/Change/@p.ID">Izmeni pitanje</a></ul>
+        foreach (ARQuizz.Answer novi in p.Answers)
+        {
+            <li>@novi.Text nosi: @novi.Score</li>
+        }
+    }
+}

@@ -1,0 +1,34 @@
+﻿@model  List<ARQuizz.Session>
+
+@if (Model.Count == 1)
+{
+    //double vremeTranja = Model[0].End 
+    <span>Kviz si zavrsio za : </span>
+    foreach(ARQuizz.Question p in Model[0].Questions)
+    {
+        <p>Pitanje:@p.Title</p>
+        if (!p.Answers.Any(t => t.IsAnswerd))
+        {
+            <p>Nisi odgovorio</p>
+            continue;
+        }
+        <p>Odgovorio si</p>
+        foreach (ARQuizz.Answer k in p.Answers)
+        {
+
+           @if (k.IsAnswerd)
+           {
+               <p>@k.Text    Osvojio si: @k.Score</p>
+           }
+        }
+    }
+}
+else{
+    foreach(ARQuizz.Session p in Model)
+    {
+        if (p.UserName != null)
+        {
+            <p>@p.UserName    Bodovi: @p.Score </p>
+        }
+    }
+}

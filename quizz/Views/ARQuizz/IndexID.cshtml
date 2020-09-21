@@ -1,0 +1,109 @@
+﻿@model int
+@{
+    List<ARQuizz.QuestionType> QuestionTypes = ARQuizz.Buffer.QuestionTypes;
+
+    if (QuestionTypes == null || QuestionTypes.Count == 0)
+    {
+        QuestionTypes = ARQuizz.QuestionType.List();
+    }
+}
+
+
+<style>
+    .ARQuizz button {
+        display: block;
+        border: none;
+        padding: 20px 50px;
+        box-shadow: 0 0 2px 1px gray;
+        margin: 10px auto 10px auto;
+        transition-duration: 0.2s;
+    }
+    
+    .ARQuizz button:hover {
+        cursor: pointer;
+        background-color: orange;
+    }
+
+    .QuizzType {
+        display: none;
+        text-align: center;
+    }
+
+    .QuizzType .inner {
+        display: inline-block;
+    }
+
+    .ARQuizzActionBarStartButton {
+        padding: 5px 50px !important;
+    }
+
+    .ARQuizzActionBarStartQuizzButton {
+        background-color: green;
+        color: white;
+    }
+
+    .b587 {
+        background-color: yellow;
+    }
+</style>
+
+<div class="ARQuizz">
+    <div class="ARQuizzActionBar">
+        <button class="ARQuizzActionBarStartQuizzButton" onclick="ShowTypes()">Start Quizz</button>
+
+        <div class="QuizzType">
+            <select class="inner ARQuizzActionBarQuizzTypeSelect">
+                @foreach (var p in ARQuizz.Buffer.QuestionTypes)
+                {
+                    <option value="@p.ID">@p.Name</option>
+                }
+            </select>
+
+            <button class="ARQuizzActionBarStartButton">Start</button>
+        </div>
+        <button class="ARQuizzActionBarShowResults b587" onclick="ShowYourResult()">Show my results</button>
+        <button class="b587" onclick="ShowAllResult()">Prikazi sve rezultate</button>
+        <button class="b587" onclick="ShowResults()"> Prikazi najbolje rezultate </button>
+    </div>
+
+
+    <script>
+        function ShowResults() {
+            window.location.href = "/Quizz/Results/Best";
+        }
+
+        function ShowTypes() {
+            var un = "asd";
+            if (un == "") {
+                alert("Moras uneti user name");
+                return;
+            }
+
+            $(".ARQuizzActionBarStartQuizzButton").slideUp();
+            $(".QuizzType").slideDown();
+        }
+
+        function StartQuizz() {
+            var val = $(".QuizzType select").val();
+
+            if (val == null) {
+                alert("ERROR");
+                return;
+            }
+            var un = "asd";
+            window.location.href = "/Quizz/Question/Next?UserName=" + un + "&Type=" + $(".QuizzType select").val();
+        }
+
+        function ShowYourResult() {
+            var un = document.getElementById("UN").value;
+            if (un == "") {
+                alert("Moras uneti user name")
+                return;
+            }
+            window.location.href = "/Quizz/Results/" + un;
+        }
+        function ShowAllResult() {
+            window.location.href = "/Quizz/Result/2";
+        }
+    </script>
+</div>

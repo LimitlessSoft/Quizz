@@ -1,0 +1,89 @@
+﻿@model ARQuizz.Question;
+@{
+    Model.ID = ARQuizz.Question.List(0).Max(t => t.ID) + 1;
+    int idAnswer = 1;
+}
+<script>
+    var question = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+</script>
+<p></p>
+<label>Group:</label>
+<select id="QuestionGroup_input" onchange="question.Type = this.value;">
+    @foreach (ARQuizz.QuestionType t in ARQuizz.QuestionType.List())
+    {
+        if (t.Name == "Miks")
+            continue;
+        <option value="@t.ID">@t.Name</option>
+    }
+</select>
+<div class="data">
+    <label>Title: </label>
+    <input onkeyup="question.Title = this.value;" style="width: 400px" id="QuestionTitle_input" type="text" placeholder="Title . . ." value="@Model.Title" />
+</div>
+<div id="ODG">
+    @for (int i = 0; i < 4; i++)
+    {
+        <p>@idAnswer Odgovor:<input onkeyup="OnChangeTxt(@idAnswer, this.value)" type="text" value="" /> Poeni:<input onkeyup="OnChangeScore(@idAnswer, this.value)" type="text" /></p>
+        idAnswer++;
+    }
+</div>
+<button onclick="DodajOdgovor()">Dodaj odgovor</button>
+
+<p id="mm"></p>
+<button onclick="Kkk()">Klik</button>
+<button onclick="AddQuestion()">Sacuvaj</button>
+<script>
+    function AddQuestion() {
+
+        $.ajax({
+            url: "/Quizz/Question/Insert",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(question),
+            success: function (s) {
+                alert(s);
+            }
+        });
+    }
+
+    function Kkk() {
+        document.getElementById("mm").innerHTML = JSON.stringify(question);
+    }
+
+    function OnChangeTxt(tt, txt) {
+        if (question.Answers == null) {
+            var k = [];
+            var p = {};
+            p.ID = parseInt(tt);
+            p.Text = txt;
+            p.Score = parseInt(0);
+            k.push(p);
+            question.Answers = k;
+            return;
+        }
+        for (var i = 0; i < question.Answers.length; i++) {
+            if (question.Answers[i].ID == tt) {
+                question.Answers[i].Text = txt;
+                return;
+            }
+        }
+            var p = {};
+            p.ID = parseInt(tt);
+            p.Text = txt;
+            p.Score = parseInt(0);
+            question.Answers.push(p);
+    }
+
+    function OnChangeScore(id, scr) {
+        if (question.Answers == null) {
+            alert("Morate uneti pitanje!!")
+            return;
+        }
+        for (var i = 0; i < question.Answers.length; i++) {
+            if (question.Answers[i].ID == id) {
+                question.Answers[i].Score = parseInt(scr);
+            }
+        }
+    }
+</script>
+

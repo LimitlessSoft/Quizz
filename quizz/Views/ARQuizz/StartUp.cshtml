@@ -1,0 +1,17 @@
+﻿<h1>Dobro dosli</h1>
+<p>Uspostavljanje pocetnih vrednosti kviza</p>
+<label>Koristim na postojecu bazu koja ima UserID i User name</label><input type="checkbox" id="sa"/>
+<label>Nemam svoju bazu sa korisnicima: <input type="checkbox" id="bez" /></label>
+<button onclick="Start()">POtvrdi</button>
+
+<script>
+    function Start() {
+        var bez = document.getElementById("bez").value;
+        var sa = document.getElementById("sa").value;
+        alert(bez);
+        alert(sa);
+        if (bez == true) {
+            alert("Krecemo");
+        }
+    }
+</script>
